@@ -1,5 +1,7 @@
 import axios from "axios";
+import { getExpoHost } from "./expo-host";
 
+const baseURL = getExpoHost().concat(":8000/api/");
 const instance = axios.create({});
 
 // interceptors
@@ -13,5 +15,5 @@ instance.interceptors.response.use(
     error => { return Promise.reject(error) },
 );
 
-export { };
+export { baseURL };
 export default instance;
