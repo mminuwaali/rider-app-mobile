@@ -1,17 +1,36 @@
 import React from "react";
-import { View } from "react-native";
-import { Confirm } from "./_sections/confirm";
-import { AmountInput } from "./_sections/amount";
-import { Balance } from "../_layout/_sections/balance";
+import Animated from "react-native-reanimated";
+import { Amount } from "../_layout/_sections/amount";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { useGetWalletBalance } from "@/src/hooks/api/wallet.hook";
 
 export default function () {
+  const balanceQuery = useGetWalletBalance();
   const [amount, setAmount] = React.useState("");
 
+  const balance = React.useMemo(
+    () => balanceQuery.data?.amount || "0",
+    [balanceQuery.data]
+  );
+
   return (
-    <View className="flex-1 p-5% gap-10">
-      <Balance />
-      <AmountInput amount={amount} setAmount={setAmount} />
-      <Confirm amount={amount} />
-    </View>
+    <Animated.View className="flex-1 p-5% pb-60 gap-14">
+      <Amount amount={amount} maxAmount={balance} setAmount={setAmount} />
+
+      <View className="mt-auto gap-6">
+        <TouchableOpacity
+          disabled={amount.length <= 0}
+          className="h-14 shadow rounded-xl bg-blue-600 items-center justify-center disabled:opacity-30 disabled:bg-gray-400"
+        >
+          {balanceQuery.isFetching ? (
+            <ActivityIndicator className="text-white" />
+          ) : (
+            <Text className="font-bold text-lg text-center text-white">
+              Continue
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
   );
 }
