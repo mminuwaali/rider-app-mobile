@@ -1,13 +1,22 @@
+import React from "react";
 import Animated from "react-native-reanimated";
 import { FadeInDown } from "react-native-reanimated";
 import { formatCurrency } from "@/src/utils/helpers";
 import { useAnimationContext } from "../_context/animation";
 import { withTiming, useAnimatedStyle } from "react-native-reanimated";
+import { useGetWalletBalance } from "@/src/hooks/api/wallet.hook";
 
 export function Balance() {
   const fadeIn = FadeInDown;
   const fadeInDelay = fadeIn.delay(300);
+
+  const balanceQuery = useGetWalletBalance();
   const { chartHeight } = useAnimationContext();
+
+  const balance = React.useMemo(
+    () => balanceQuery.data?.amount || "0",
+    [balanceQuery.data]
+  );
 
   const balanceAnimatedStyle = useAnimatedStyle(() => ({
     fontSize: withTiming(chartHeight.value <= 0 ? 20 : 48),
@@ -26,7 +35,7 @@ export function Balance() {
         className="font-inter"
         entering={fadeInDelay}
         style={balanceAnimatedStyle}
-        children={formatCurrency(20_000)}
+        children={formatCurrency(+balance)}
       />
     </Animated.View>
   );
