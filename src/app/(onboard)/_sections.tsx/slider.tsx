@@ -1,16 +1,22 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
+import { type ImageSourcePropType } from 'react-native';
 
+interface ISliderProps {
+    title: string;
+    description: string;
+    image: ImageSourcePropType;
+}
 
-export function Slider(properties: Record<"title" | "description" | "imageUri", string>) {
+export function Slider(properties: ISliderProps) {
 
     return (
         <View className='flex-1 justify-center items-center px-8'>
             <View className='h-1/2 w-full justify-center items-center mb-8'>
                 <Text>
                     <Image
-                        className='w-80 h-80 bg-gray-100'
-                        source={{ uri: properties.imageUri }}
+                        source={properties.image}
+                        className='w-80 h-80 object-cover'
                     />
                 </Text>
             </View>
