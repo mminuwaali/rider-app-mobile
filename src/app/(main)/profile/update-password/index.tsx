@@ -1,4 +1,6 @@
 import React from "react";
+import { Formik, FormikHelpers } from "formik";
+import Entypo from "@expo/vector-icons/Entypo";
 import * as Yup from "yup";
 import {
   View,
@@ -7,23 +9,28 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { Formik, FormikHelpers } from "formik";
 
 type PasswordChangeValues = {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
 };
+
 const passwordValidationSchema = Yup.object().shape({
-  oldPassword: Yup.string().required("Old password is required."),
-  newPassword: Yup.string().required("New password is required."),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("newPassword"), undefined], "Passwords must match.")
+  old_password: Yup.string().required("Old password is required."),
+  new_password: Yup.string().required("New password is required."),
+  confirm_password: Yup.string()
+    .oneOf([Yup.ref("new_password"), undefined], "Passwords must match.")
     .required("Please confirm your new password."),
 });
 
-export default function ChangePasswordScreen() {
+export default function y() {
   const [loading, setLoading] = React.useState(false);
+  const [visible, setVisible] = React.useState({
+    old_password: false,
+    new_password: false,
+    confirm_password: false,
+  });
 
   const handlePasswordChange = async (
     values: PasswordChangeValues,
@@ -39,106 +46,127 @@ export default function ChangePasswordScreen() {
   };
 
   return (
-    <View className="gap-20 flex-1">
-      <View className="">
-        <Text className="text-xl font-bold text-center mb-4">
-          Change Your Password
-        </Text>
-        <Text className="text-sm text-gray-600 text-center mb-6">
-          For your security:
-          {"\n"}- Your password must be at least 8 characters long.
-          {"\n"}- Include uppercase, lowercase, and special characters.
-          {"\n"}- Avoid using dictionary words or your personal information.
-        </Text>
-      </View>
+    <Formik
+      initialValues={{
+        old_password: "",
+        new_password: "",
+        confirm_password: "",
+      }}
+      validationSchema={passwordValidationSchema}
+      onSubmit={handlePasswordChange}
+    >
+      {({ values, setFieldValue, handleSubmit, touched, errors }) => (
+        <View className="flex-1 gap-20">
+          <View className="">
+            <Text className="text-xl font-bold text-center mb-4">
+              Change Your Password
+            </Text>
+            <Text className="text-sm text-gray-600 text-center mb-6">
+              For your security:
+              {"\n"}- Your password must be at least 8 characters long.
+              {"\n"}- Include uppercase, lowercase, and special characters.
+              {"\n"}- Avoid using dictionary words or your personal information.
+            </Text>
+          </View>
 
-      <Formik
-        initialValues={{
-          oldPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        }}
-        validationSchema={passwordValidationSchema}
-        onSubmit={handlePasswordChange}
-      >
-        {(props) => (
           <View className="gap-4">
-            <View>
-              <Text className="text-gray-800 font-medium mb-1">
-                Old Password
-              </Text>
+            <View className="bg-white flex-row items-center shadow-sm rounded-md gap-4 px-3">
+              <Entypo name="lock" size={16} />
               <TextInput
-                secureTextEntry
+                secureTextEntry={!visible.old_password}
+                className="h-14 grow"
                 placeholder="Enter your old password"
-                value={props.values.oldPassword}
-                onChangeText={props.handleChange("oldPassword")}
-                onBlur={() => props.setFieldTouched("oldPassword")}
-                className="h-12 px-4 bg-white rounded-md shadow-md"
+                value={values.old_password}
+                onChangeText={(value) => setFieldValue("old_password", value)}
+                keyboardType={visible.old_password ? "visible-password" : "default"}
               />
-              {props.touched.oldPassword && props.errors.oldPassword && (
-                <Text className="text-red-500 text-sm">
-                  {props.errors.oldPassword}
-                </Text>
-              )}
+              <Entypo
+                size={16}
+                name={visible.old_password ? "eye-with-line" : "eye"}
+                onPress={() =>
+                  setVisible((prev) => ({
+                    ...prev,
+                    old_password: !prev.old_password,
+                  }))
+                }
+              />
             </View>
+            {touched.old_password && errors.old_password && (
+              <Text className="text-red-500 text-sm">{errors.old_password}</Text>
+            )}
 
-            <View>
-              <Text className="text-gray-800 font-medium mb-1">
-                New Password
-              </Text>
+            <View className="bg-white flex-row items-center shadow-sm rounded-md gap-4 px-3">
+              <Entypo name="lock" size={16} />
               <TextInput
-                secureTextEntry
+                secureTextEntry={!visible.new_password}
+                className="h-14 grow"
                 placeholder="Enter your new password"
-                value={props.values.newPassword}
-                onChangeText={props.handleChange("newPassword")}
-                onBlur={() => props.setFieldTouched("newPassword")}
-                className="h-12 px-4 bg-white rounded-md shadow-md"
+                value={values.new_password}
+                onChangeText={(value) => setFieldValue("new_password", value)}
+                keyboardType={visible.new_password ? "visible-password" : "default"}
               />
-              {props.touched.newPassword && props.errors.newPassword && (
-                <Text className="text-red-500 text-sm">
-                  {props.errors.newPassword}
-                </Text>
-              )}
+              <Entypo
+                size={16}
+                name={visible.new_password ? "eye-with-line" : "eye"}
+                onPress={() =>
+                  setVisible((prev) => ({
+                    ...prev,
+                    new_password: !prev.new_password,
+                  }))
+                }
+              />
             </View>
+            {touched.new_password && errors.new_password && (
+              <Text className="text-red-500 text-sm">{errors.new_password}</Text>
+            )}
 
-            <View>
-              <Text className="text-gray-800 font-medium mb-1">
-                Confirm Password
-              </Text>
+            <View className="bg-white flex-row items-center shadow-sm rounded-md gap-4 px-3">
+              <Entypo name="lock" size={16} />
               <TextInput
-                secureTextEntry
+                secureTextEntry={!visible.confirm_password}
+                className="h-14 grow"
                 placeholder="Confirm your new password"
-                value={props.values.confirmPassword}
-                onChangeText={props.handleChange("confirmPassword")}
-                onBlur={() => props.setFieldTouched("confirmPassword")}
-                className="h-12 px-4 bg-white rounded-md shadow-md"
+                value={values.confirm_password}
+                onChangeText={(value) =>
+                  setFieldValue("confirm_password", value)
+                }
+                keyboardType={
+                  visible.confirm_password ? "visible-password" : "default"
+                }
               />
-              {props.touched.confirmPassword &&
-                props.errors.confirmPassword && (
-                  <Text className="text-red-500 text-sm">
-                    {props.errors.confirmPassword}
-                  </Text>
-                )}
+              <Entypo
+                size={16}
+                name={visible.confirm_password ? "eye-with-line" : "eye"}
+                onPress={() =>
+                  setVisible((prev) => ({
+                    ...prev,
+                    confirm_password: !prev.confirm_password,
+                  }))
+                }
+              />
             </View>
+            {touched.confirm_password && errors.confirm_password && (
+              <Text className="text-red-500 text-sm">{errors.confirm_password}</Text>
+            )}
+          </View>
 
+          <View className="gap-6">
             <TouchableOpacity
               disabled={loading}
-              onPress={() => props.handleSubmit()}
-              className={`h-12 rounded-md bg-blue-600 justify-center items-center ${
-                loading ? "opacity-50" : ""
-              }`}
+              onPress={() => handleSubmit()}
+              className="h-14 shadow rounded-xl bg-blue-600 items-center justify-center disabled:opacity-30 disabled:bg-gray-400"
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator className="text-white" />
               ) : (
-                <Text className="text-white font-bold text-lg">
+                <Text className="font-bold text-lg text-center text-white">
                   Update Password
                 </Text>
               )}
             </TouchableOpacity>
           </View>
-        )}
-      </Formik>
-    </View>
+        </View>
+      )}
+    </Formik>
   );
 }
