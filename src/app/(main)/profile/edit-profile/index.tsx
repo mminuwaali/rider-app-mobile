@@ -16,15 +16,17 @@ type Submit<T> = (values: T, helpers: FormikHelpers<T>) => void;
 
 export default function () {
   const [loading, setLoading] = React.useState(false);
-  const [visible, setVisible] = React.useState({
-    confirm: false,
-    password: false,
-  });
+
+  const genders = [
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+  ];
 
   const initialValues = {
     email: "",
     last_name: "",
     first_name: "",
+    gender: "male",
     profileImage: null as string | null, // Change File to string
   };
 
@@ -87,6 +89,28 @@ export default function () {
 
           {/* Input Fields */}
           <View className="gap-4">
+            <View className="flex-row justify-center mb-4 gap-4">
+                          {genders.map((gender) => (
+                            <TouchableOpacity
+                              key={gender.value}
+                              className={`flex-row items-center justify-center px-4 py-2 rounded-full h-10 border flex-1 ${
+                                values.gender === gender.value
+                                  ? "border-slate-600 bg-slate-600"
+                                  : "border-gray"
+                              }`}
+                              onPress={() => setFieldValue("gender", gender.value)}
+                            >
+                              <Text
+                                className={`text-center ${
+                                  values.gender === gender.value ? "text-white" : "text-black"
+                                }`}
+                              >
+                                {gender.label}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+
             <View className="bg-white flex-row items-center shadow-sm rounded-md gap-4 px-3">
               <Entypo name="user" size={16} />
               <TextInput
