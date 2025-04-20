@@ -7,11 +7,11 @@ import { Text, TouchableOpacity } from "react-native";
 export function Button() {
   return (
     <Animated.View
-    className="flex-1 gap-2"
+    className="flex-1 gap-4"
       entering={FadeInDown.delay(300)}
     >
       <Link asChild href="/profile/edit-profile">
-        <TouchableOpacity className="p-3 flex-row rounded-lg items-center justify-between bg-gray-50">
+        <TouchableOpacity className="p-4 flex-row rounded-lg items-center justify-between bg-gray-50">
           <Text className="text-gray-500 capitalize text-xl font-inter font-bold">
             edit profile
           </Text>
@@ -20,7 +20,7 @@ export function Button() {
       </Link>
 
       <Link asChild href="/profile/update-password">
-        <TouchableOpacity className="p-3 flex-row rounded-lg items-center justify-between bg-gray-50">
+        <TouchableOpacity className="p-4 flex-row rounded-lg items-center justify-between bg-gray-50">
           <Text className="text-gray-500 capitalize text-xl font-inter font-bold">
             update password
           </Text>
@@ -29,7 +29,7 @@ export function Button() {
       </Link>
 
       <Link asChild href="/">
-        <TouchableOpacity className="p-3 flex-row rounded-lg items-center justify-between bg-gray-50">
+        <TouchableOpacity className="p-4 flex-row rounded-lg items-center justify-between bg-gray-50">
           <Text className="text-gray-500 capitalize text-xl font-inter font-bold">
             discount voucher
           </Text>
