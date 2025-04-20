@@ -1,13 +1,13 @@
 {
   "expo": {
+    "scheme": "myapp",
+    "version": "1.0.0",
     "name": "rider-app",
     "slug": "rider-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "orientation": "portrait",
+    "icon": "./public/icon.png",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": false,
       "config": {
@@ -21,27 +21,28 @@
         }
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000",
+        "foregroundImage": "./public/icon.png"
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.mminuwaali.riderapp"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./public/icon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "imageWidth": 300,
+          "resizeMode": "cover",
+          "backgroundColor": "#000000",
+          "image": "./public/splash.png"
         }
       ],
       [
