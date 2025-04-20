@@ -4,7 +4,7 @@ import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 export default function () {
   return (
     <Stack screenOptions={screenOptions}>
-      <Stack.Screen name="default" options={{ headerTitle: "Profile" }} />
+      <Stack.Screen name="default/index" options={{ headerTitle: "Profile" }} />
       <Stack.Screen name="edit-profile/index" options={{ headerTitle: "Edit Profile" }} />
       <Stack.Screen name="update-password/index" options={{ headerTitle: "Update Password" }} />
     </Stack>
