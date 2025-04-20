@@ -1,46 +1,37 @@
 import api from "@/src/utils/request";
 import { useMutation } from "react-query";
+import { TokenManager } from "@/src/utils/token";
 
 export const useSignout = () => {
   return () => {};
 };
 
-export const useSignin = useMutation({
-  mutationKey: ["sign-in"],
-  async mutationFn(data: object) {
-    const res = await api.post("/auth/signin/", data);
-    return res.data;
-  },
-});
+export const useSignin = () =>
+  useMutation({
+    mutationKey: ["sign-in"],
+    async mutationFn(data: object) {
+      const res = await api.post("/auth/signin/", data);
+      return res.data as Record<"access" | "refresh", string>;
+    },
+    onSuccess(data) {
+      TokenManager.setTokens(data.access, data.refresh);
+    },
+  });
 
-export const useSignup = useMutation({
-  mutationKey: ["sign-up"],
-  async mutationFn(data: object) {
-    const res = await api.post("/auth/signup/", data);
-    return res.data;
-  },
-});
+export const useSignup = () =>
+  useMutation({
+    mutationKey: ["sign-up"],
+    async mutationFn(data: object) {
+      const res = await api.post("/auth/signup/", data);
+      return res.data;
+    },
+  });
 
-export const usePasswordReset = useMutation({
-  mutationKey: ["reset-password"],
-  async mutationFn(data: object) {
-    const res = await api.post("/auth/password/reset/", data);
-    return res.data;
-  },
-});
-
-export const usePasswordChange = useMutation({
-  mutationKey: ["change-password"],
-  async mutationFn(data: object) {
-    const res = await api.post("/auth/password/change/", data);
-    return res.data;
-  },
-});
-
-export const usePasswordForogot = useMutation({
-  mutationKey: ["forgot-password"],
-  async mutationFn(data: object) {
-    const res = await api.post("/auth/password/forgot/", data);
-    return res.data;
-  },
-});
+export const useRefreshToken = () =>
+  useMutation({
+    mutationKey: ["refresh-token"],
+    async mutationFn() {
+      const res = await api.post("/auth/refresh/");
+      return res.data;
+    },
+  });
