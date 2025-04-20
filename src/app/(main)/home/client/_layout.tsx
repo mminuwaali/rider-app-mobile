@@ -13,8 +13,8 @@ export default function () {
     }, []);
 
     return (
-        <Tabs screenOptions={screenOptions} initialRouteName="default">
-            <Tabs.Screen name="default" />
+        <Tabs screenOptions={screenOptions} initialRouteName="default/index">
+            <Tabs.Screen name="default/index" />
         </Tabs>
     );
 }
