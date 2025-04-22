@@ -1,10 +1,12 @@
 interface IUser {
     id: number;
     email: string;
+    profile?: string;
     username: string;
-    password: string;
     last_name: string;
     first_name: string;
+    role: "rider" | "client";
+    gender?: "male" | "female";
 };
 
 interface IWallet {
