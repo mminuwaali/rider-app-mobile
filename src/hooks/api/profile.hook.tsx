@@ -1,14 +1,21 @@
-import api from "@/src/utils/request";
-import { useQuery, useMutation } from "react-query";
+import api from "@/utils/request";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useAuthContext } from "@/app/(providers)/auth.provider";
 
-export const useGetProfile = () =>
-  useQuery({
+export const useGetProfile = () => {
+  const { setUser } = useAuthContext();
+
+  return useQuery({
+    enabled: false,
     queryKey: ["get-profile"],
     async queryFn() {
-      const res = await api.get("/auth/profile/");
+      const res = await api.get<IUser>("/auth/profile/");
+
+      setUser(res.data);
       return res.data as IUser;
     },
   });
+}
 
 export const useUpdateProfile = () =>
   useMutation({

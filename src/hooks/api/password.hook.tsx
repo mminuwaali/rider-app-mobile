@@ -1,4 +1,4 @@
-import api from "@/src/utils/request";
+import api from "@/utils/request";
 import { useMutation } from "react-query";
 
 

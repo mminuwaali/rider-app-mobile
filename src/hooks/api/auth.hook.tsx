@@ -1,6 +1,6 @@
-import api from "@/src/utils/request";
-import { useMutation } from "react-query";
-import { TokenManager } from "@/src/utils/token";
+import api from "@/utils/request";
+import { TokenManager } from "@/utils/token";
+import { useMutation } from "@tanstack/react-query";
 
 export const useSignout = () => {
   return () => {};

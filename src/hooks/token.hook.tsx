@@ -1,5 +1,5 @@
 import React from 'react';
-import { TokenManager } from '@/src/utils/token';
+import { TokenManager } from '@/utils/token';
 
 export const useTokenListener = (interval: number = 60000) => {
   React.useEffect(() => {
