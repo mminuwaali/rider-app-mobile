@@ -3,42 +3,52 @@ import { router } from "expo-router";
 import { Header } from "../_layout/header";
 import { Formik, FormikHelpers } from "formik";
 import Entypo from "@expo/vector-icons/Entypo";
+import { signupSchema } from "@/constants/schema";
+import { useSignup } from "./_sections/_hooks/signup.hook";
 import {
   Text,
   View,
   TextInput,
-  ActivityIndicator,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 
 type Submit<T> = (values: T, helpers: FormikHelpers<T>) => void;
 
 export default function () {
-  const [loading, setLoading] = React.useState(false);
-  const [visible, setVisible] = React.useState({
-    confirm: false,
-    password: false,
-  });
+  const signupMutation = useSignup();
 
-  const initialValues = { email: "", username: "", password: "", confirm: "", role: "" };
+  const [loading, setLoading] = React.useState(false);
+  const [visible, setVisible] = React.useState({ confirm: false, password: false });
 
   const roles = [
     { label: "Rider", value: "rider" },
     { label: "Client", value: "client" },
   ];
 
-  const onSubmit: Submit<typeof initialValues> = async (values, helpers) => {
-    console.log(values);
-    setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+  const initialValues = {
+    email: "",
+    confirm: "",
+    username: "",
+    password: "",
+    role: "" as IUser['role'],
+  };
 
-    setLoading(false);
-    router.replace("/sign-in");
+  const onSubmit: Submit<typeof initialValues> = async (values, helpers) => {
+    signupMutation.mutate(values, {
+      onSuccess() {
+
+      }
+    })
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
-      {({ values, setFieldValue, handleSubmit }) => (
+    <Formik
+      onSubmit={onSubmit}
+      initialValues={initialValues}
+      validationSchema={signupSchema}
+    >
+      {(props) => (
         <View className="flex-1 gap-20">
           <Header
             title="Hello there"
@@ -50,17 +60,15 @@ export default function () {
               {roles.map((role) => (
                 <TouchableOpacity
                   key={role.value}
-                  className={`flex-row items-center justify-center px-4 py-2 rounded-full h-10 border flex-1 ${
-                    values.role === role.value
-                      ? "border-slate-600 bg-slate-600"
-                      : "border-gray"
-                  }`}
-                  onPress={() => setFieldValue("role", role.value)}
+                  className={`flex-row items-center justify-center px-4 py-2 rounded-full h-10 border flex-1 ${props.values.role === role.value
+                    ? "border-slate-600 bg-slate-600"
+                    : "border-gray"
+                    }`}
+                  onPress={() => props.setFieldValue("role", role.value)}
                 >
                   <Text
-                    className={`text-center ${
-                      values.role === role.value ? "text-white" : "text-black"
-                    }`}
+                    className={`text-center ${props.values.role === role.value ? "text-white" : "text-black"
+                      }`}
                   >
                     {role.label}
                   </Text>
@@ -71,11 +79,11 @@ export default function () {
             <View className="bg-white flex-row items-center shadow-sm rounded-md gap-4 px-3">
               <Entypo name="email" size={16} />
               <TextInput
-                value={values.email}
+                value={props.values.email}
                 className="h-14 grow"
                 keyboardType="email-address"
                 placeholder="Enter your email"
-                onChangeText={(value) => setFieldValue("email", value)}
+                onChangeText={(value) => !signupMutation.isPending && props.setFieldValue("email", value)}
               />
             </View>
 
@@ -84,9 +92,9 @@ export default function () {
               <TextInput
                 className="h-14 grow"
                 keyboardType="default"
-                value={values.username}
+                value={props.values.username}
                 placeholder="Enter your username"
-                onChangeText={(value) => setFieldValue("username", value)}
+                onChangeText={(value) => !signupMutation.isPending && props.setFieldValue("username", value)}
               />
             </View>
 
@@ -95,10 +103,10 @@ export default function () {
               <TextInput
                 secureTextEntry
                 className="h-14 grow"
-                value={values.password}
+                value={props.values.password}
                 placeholder="Enter your password"
-                onChangeText={(value) => setFieldValue("password", value)}
                 keyboardType={visible.password ? "visible-password" : "default"}
+                onChangeText={(value) => !signupMutation.isPending && props.setFieldValue("password", value)}
               />
 
               <Entypo
@@ -115,10 +123,10 @@ export default function () {
               <TextInput
                 secureTextEntry
                 className="h-14 grow"
-                value={values.confirm}
+                value={props.values.confirm}
                 placeholder="Confirm your password"
-                onChangeText={(value) => setFieldValue("confirm", value)}
                 keyboardType={visible.confirm ? "visible-password" : "default"}
+                onChangeText={(value) => !signupMutation.isPending && props.setFieldValue("confirm", value)}
               />
 
               <Entypo
@@ -133,8 +141,8 @@ export default function () {
 
           <View className="gap-6">
             <TouchableOpacity
-              disabled={loading}
-              onPress={() => handleSubmit()}
+              disabled={signupMutation.isPending}
+              onPress={() => props.handleSubmit()}
               className="h-14 shadow rounded-xl bg-blue-600 items-center justify-center disabled:opacity-30 disabled:bg-gray-400"
             >
               {loading ? (

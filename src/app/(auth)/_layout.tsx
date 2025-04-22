@@ -1,12 +1,20 @@
-import { Tabs } from "expo-router";
+import React from "react";
+import { router, Tabs } from "expo-router";
 import { TouchableOpacity } from "react-native";
+import { useAuthContext } from "../(providers)/auth.provider";
 import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 
 export default function () {
+  const {user} = useAuthContext();
+
+  React.useEffect(() =>{
+    if(user) router.replace("/home/" as never);
+  },[user]);
+
   return (
     <Tabs screenOptions={screenOptions}>
-      <Tabs.Screen name="sign-in" options={{ title: "Sign in" }} />
-      <Tabs.Screen name="sign-up" options={{ title: "Sign up" }} />
+      <Tabs.Screen name="sign-in/index" options={{ title: "Sign in" }} />
+      <Tabs.Screen name="sign-up/index" options={{ title: "Sign up" }} />
       <Tabs.Screen
         name="(pass)"
         options={{ tabBarItemStyle: { display: "none" } }}
