@@ -3,7 +3,7 @@ import { baseURL } from "./request";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const REFRESH_TOKEN_URL = baseURL.concat("/auth/refresh/");
+const REFRESH_TOKEN_URL = baseURL?.concat("/auth/refresh/");
 
 interface DecodedToken {
   exp: number; // Expiration timestamp
@@ -16,6 +16,11 @@ export const TokenManager = {
 
   async getRefreshToken() {
     return await AsyncStorage.getItem("refresh_token");
+  },
+
+  async clearTokens() {
+    await AsyncStorage.removeItem("access_token");
+    await AsyncStorage.removeItem("refresh_token");
   },
 
   async setTokens(accessToken: string, refreshToken: string) {
