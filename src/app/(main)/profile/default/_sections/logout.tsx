@@ -1,5 +1,6 @@
 import React from "react";
 import { router } from "expo-router";
+import { TokenManager } from "@/utils/token";
 import { ConfirmLogout } from "./_modals/confirm-logout";
 import { Text, Modal, TouchableOpacity } from "react-native";
 
@@ -7,9 +8,11 @@ export function Logout() {
   const [open, setOpen] = React.useState(false);
 
   const handleCancel = () => setOpen(false);
-  const handleAccept = () => {
+  const handleAccept = async () => {
+    await TokenManager.clearTokens();
+
     handleCancel();
-    router.replace("/sign-in");
+    router.replace("/(onboard)");
   };
 
   return (

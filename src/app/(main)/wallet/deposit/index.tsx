@@ -1,11 +1,11 @@
 import React from "react";
 import Animated from "react-native-reanimated";
 import { Amount } from "../_layout/_sections/amount";
+import { useGetBalance } from "@/hooks/api/wallet.hook";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { useGetWalletBalance } from "@/src/hooks/api/wallet.hook";
 
 export default function () {
-  const balanceQuery = useGetWalletBalance();
+  const balanceQuery = useGetBalance();
   const [amount, setAmount] = React.useState("");
 
   const balance = React.useMemo(
@@ -15,7 +15,7 @@ export default function () {
 
   return (
     <Animated.View className="flex-1 p-5% pb-60 gap-14">
-      <Amount amount={amount} maxAmount={balance} setAmount={setAmount} />
+      <Amount maxAmount={balance} setAmount={setAmount} />
 
       <View className="mt-auto gap-6">
         <TouchableOpacity

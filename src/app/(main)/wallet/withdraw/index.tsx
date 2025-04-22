@@ -5,17 +5,16 @@ import { InOutChart } from "../_layout/_sections/in-out-chart";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 export default function () {
-  const loading = false;
+  const [loading] = React.useState(false);
   const [amount, setAmount] = React.useState("");
 
   return (
     <Animated.View className="flex-1 p-5% pb-60 gap-14">
       <Amount
-        amount={amount}
         maxAmount="20000"
         setAmount={setAmount}
       />
-      <InOutChart balance="20000" />
+      <InOutChart />
 
       <View className="mt-auto gap-6">
         <TouchableOpacity

@@ -1,29 +1,29 @@
 import React from "react";
-import { formatCurrency } from "@/src/utils/helpers";
+import { formatCurrency } from "@/utils/helpers";
 import { Text, TextInput, View } from "react-native";
+import { useGetBalance } from "@/hooks/api/wallet.hook";
 
 interface IAmountProps {
-    amount: string;
     maxAmount?: string;
     setAmount: (value: string) => void;
 };
 
-export function aAmount(properties: IAmountProps) {
-    const maxAmount = 20_000;
+export function Amount(properties: IAmountProps) {
+    const walletQuery = useGetBalance();
     const ref = React.useRef<TextInput>(null);
 
     const handleSetAmount = (value: string) => {
         let filteredValue = value.replaceAll(/\D/g, "");
         properties.setAmount(
             Math.min(
-                +filteredValue, +(properties.maxAmount || 0)
+                +filteredValue, Number(walletQuery.data?.amount)
             ).toString()
         )
     };
 
     return <View className="items-center justify-center relative">
         <Text className="mt-6 drop-shadow text-gray-400 text-7xl font-bold pointer-events-none">
-            {formatCurrency(+properties.amount)}
+            {formatCurrency(Number(walletQuery.data?.amount))}
         </Text>
 
         <Text className={`text-sm ${!properties.maxAmount && "hidden"}`}>
@@ -33,12 +33,12 @@ export function aAmount(properties: IAmountProps) {
         <TextInput
             ref={ref}
             maxLength={6}
-            value={properties.amount}
             keyboardType="number-pad"
             onChangeText={handleSetAmount}
             className="inset-0 absolute opacity-0"
+            value={walletQuery.data?.amount ?? ""}
             onSelectionChange={({ nativeEvent: { selection } }) => {
-                const length = properties.amount.length;
+                const length = walletQuery.data?.amount.length ?? 0;
                 if (selection && ref.current) ref.current.setNativeProps({
                     selection: { start: length, end: length }
                 })

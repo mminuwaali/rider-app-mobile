@@ -1,6 +1,6 @@
 import Animated from "react-native-reanimated";
 import { BarChart } from "react-native-chart-kit";
-import { calculateWidth } from "@/src/utils/helpers";
+import { calculateWidth } from "@/utils/helpers";
 import * as Reanimated from "react-native-reanimated";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useAnimationContext } from "../../_layout/_context/animation";

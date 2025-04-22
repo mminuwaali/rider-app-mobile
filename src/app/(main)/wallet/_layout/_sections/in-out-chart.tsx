@@ -1,21 +1,21 @@
-import { ProgressChart } from "react-native-chart-kit";
+import React from "react";
 import { Text, View } from "react-native";
-import { calculateWidth, formatCurrency } from "@/src/utils/helpers";
+import { ProgressChart } from "react-native-chart-kit";
+import { useGetBalance } from "@/hooks/api/wallet.hook";
+import { calculateWidth, formatCurrency } from "@/utils/helpers";
 
-interface IInOutChartProps {
-    balance?: string;
-}
+export function InOutChart() {
+    const balanceQuery = useGetBalance();
+    const wallet = React.useMemo(() => balanceQuery.data, [balanceQuery.data])
 
+    const totalDeposit = Number(wallet?.total_deposit);
+    const totalWithdrawal = Number(wallet?.total_withdrawn);
+    const totalAll = Number(totalDeposit + totalWithdrawal);
 
-export function InOutChart(properties: IInOutChartProps) {
-    const totalDeposit = 80000;
-    const totalWithdrawal = 50000;
-    const total = totalDeposit + totalWithdrawal;
-    const totalBalance = +(properties.balance || 0);
 
     const progressData = {
         colors: ["#4A5568", "#718096"],
-        data: [totalDeposit / total, totalWithdrawal / total],
+        data: [(totalDeposit / totalAll) || 0, (totalWithdrawal / totalAll || 0)],
     };
 
     const legendItems = [
@@ -27,7 +27,7 @@ export function InOutChart(properties: IInOutChartProps) {
         <View className="items-center">
             <Text className="text-xl font-bold text-gray-700">Financial Overview</Text>
             <Text className="mb-5 text-xl text-gray-500">
-                Current Balance: {formatCurrency(+(properties.balance || 0))}
+                Current Balance: {formatCurrency(Number(wallet?.amount))}
             </Text>
             <View className="w-full flex-row justify-around">
                 {legendItems.map((item, index) => (
@@ -39,6 +39,7 @@ export function InOutChart(properties: IInOutChartProps) {
             </View>
 
             <ProgressChart
+                hideLegend
                 radius={32}
                 height={220}
                 strokeWidth={16}
@@ -50,7 +51,6 @@ export function InOutChart(properties: IInOutChartProps) {
                     backgroundGradientFrom: "#FFFFFF",
                     color: (opacity = 1, index) => progressData.colors[index!],
                 }}
-                hideLegend={true}
             />
         </View>
     );

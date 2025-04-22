@@ -1,16 +1,16 @@
 import React from "react";
 import Animated from "react-native-reanimated";
+import { formatCurrency } from "@/utils/helpers";
 import { FadeInDown } from "react-native-reanimated";
-import { formatCurrency } from "@/src/utils/helpers";
+import { useGetBalance } from "@/hooks/api/wallet.hook";
 import { useAnimationContext } from "../_context/animation";
 import { withTiming, useAnimatedStyle } from "react-native-reanimated";
-import { useGetWalletBalance } from "@/src/hooks/api/wallet.hook";
 
 export function Balance() {
   const fadeIn = FadeInDown;
   const fadeInDelay = fadeIn.delay(300);
 
-  const balanceQuery = useGetWalletBalance();
+  const balanceQuery = useGetBalance();
   const { chartHeight } = useAnimationContext();
 
   const balance = React.useMemo(

@@ -2,47 +2,40 @@ import React from "react";
 import { router } from "expo-router";
 import { Formik, FormikHelpers } from "formik";
 import Entypo from "@expo/vector-icons/Entypo";
+import * as ImagePicker from "expo-image-picker";
+import { useAuthContext } from "@/app/(providers)/auth.provider";
+import { useGetProfile, useUpdateProfile } from "@/hooks/api/profile.hook";
 import {
   Text,
   View,
-  TextInput,
-  ActivityIndicator,
-  TouchableOpacity,
   Image,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 
 type Submit<T> = (values: T, helpers: FormikHelpers<T>) => void;
 
 export default function () {
-  const [loading, setLoading] = React.useState(false);
+  const { user } = useAuthContext();
+  const profileQuery = useGetProfile();
+  const profileMutation = useUpdateProfile();
 
   const genders = [
     { label: "Male", value: "male" },
     { label: "Female", value: "female" },
   ];
 
-  const initialValues = {
-    email: "",
-    last_name: "",
-    first_name: "",
-    gender: "male",
-    profileImage: null as string | null, // Change File to string
-  };
+  const initialValues = user!;
 
   const onSubmit: Submit<typeof initialValues> = async (values, helpers) => {
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("email", values.email);
-    formData.append("last_name", values.last_name);
-    formData.append("first_name", values.first_name);
-
-    console.log("Submitting FormData:", formData);
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setLoading(false);
-    router.replace("/sign-in");
+    console.log(values)
+    profileMutation.mutate(values, {
+      onSuccess() {
+        profileQuery.refetch();
+        router.canGoBack() ? router.back() : router.replace("/profile/default");
+      }
+    })
   };
 
   const pickImage = async (
@@ -66,9 +59,9 @@ export default function () {
         <View className="flex-1 gap-20">
           {/* Image Upload Section */}
           <View className="gap-4">
-            {values.profileImage ? (
+            {values.profile ? (
               <Image
-                source={{ uri: values.profileImage }}
+                source={{ uri: values.profile }}
                 className="w-32 h-32 rounded-full self-center"
               />
             ) : (
@@ -90,26 +83,24 @@ export default function () {
           {/* Input Fields */}
           <View className="gap-4">
             <View className="flex-row justify-center mb-4 gap-4">
-                          {genders.map((gender) => (
-                            <TouchableOpacity
-                              key={gender.value}
-                              className={`flex-row items-center justify-center px-4 py-2 rounded-full h-10 border flex-1 ${
-                                values.gender === gender.value
-                                  ? "border-slate-600 bg-slate-600"
-                                  : "border-gray"
-                              }`}
-                              onPress={() => setFieldValue("gender", gender.value)}
-                            >
-                              <Text
-                                className={`text-center ${
-                                  values.gender === gender.value ? "text-white" : "text-black"
-                                }`}
-                              >
-                                {gender.label}
-                              </Text>
-                            </TouchableOpacity>
-                          ))}
-                        </View>
+              {genders.map((gender) => (
+                <TouchableOpacity
+                  key={gender.value}
+                  className={`flex-row items-center justify-center px-4 py-2 rounded-full h-10 border flex-1 ${values.gender === gender.value
+                    ? "border-slate-600 bg-slate-600"
+                    : "border-gray"
+                    }`}
+                  onPress={() => setFieldValue("gender", gender.value)}
+                >
+                  <Text
+                    className={`text-center ${values.gender === gender.value ? "text-white" : "text-black"
+                      }`}
+                  >
+                    {gender.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
 
             <View className="bg-white flex-row items-center shadow-sm rounded-md gap-4 px-3">
               <Entypo name="user" size={16} />
@@ -148,11 +139,11 @@ export default function () {
           {/* Submit Button */}
           <View className="gap-6">
             <TouchableOpacity
-              disabled={loading}
+              disabled={profileMutation.isPending}
               onPress={() => handleSubmit()}
               className="h-14 shadow rounded-xl bg-blue-600 items-center justify-center disabled:opacity-30 disabled:bg-gray-400"
             >
-              {loading ? (
+              {profileMutation.isPending ? (
                 <ActivityIndicator className="text-white" />
               ) : (
                 <Text className="font-bold text-lg text-center text-white">
