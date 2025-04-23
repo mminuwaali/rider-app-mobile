@@ -3,7 +3,9 @@ import { TokenManager } from "@/utils/token";
 import { useMutation } from "@tanstack/react-query";
 
 export const useSignout = () => {
-  return () => {};
+  return () => {
+    TokenManager.clearTokens();
+  };
 };
 
 export const useSignin = () =>
