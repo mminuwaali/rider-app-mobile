@@ -1,6 +1,5 @@
 import { Link } from "expo-router";
-import { Text } from "react-native";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { TouchableOpacity } from "react-native";
 
 export function Button() {

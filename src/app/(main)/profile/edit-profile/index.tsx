@@ -3,16 +3,10 @@ import { router } from "expo-router";
 import { Formik, FormikHelpers } from "formik";
 import Entypo from "@expo/vector-icons/Entypo";
 import * as ImagePicker from "expo-image-picker";
-import { useAuthContext } from "@/app/(providers)/auth.provider";
+import { Text, View, Image, TextInput } from "react-native";
+import { TouchableOpacity, ActivityIndicator } from "react-native";
+import { useAuthContext } from "@/components/providers/auth.provider";
 import { useGetProfile, useUpdateProfile } from "@/hooks/api/profile.hook";
-import {
-  Text,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
 
 type Submit<T> = (values: T, helpers: FormikHelpers<T>) => void;
 
@@ -29,7 +23,6 @@ export default function () {
   const initialValues = user!;
 
   const onSubmit: Submit<typeof initialValues> = async (values, helpers) => {
-    console.log(values)
     profileMutation.mutate(values, {
       onSuccess() {
         profileQuery.refetch();
@@ -59,7 +52,7 @@ export default function () {
         <View className="flex-1 gap-20">
           {/* Image Upload Section */}
           <View className="gap-4">
-            {values.profile ? (
+            {values?.profile ? (
               <Image
                 source={{ uri: values.profile }}
                 className="w-32 h-32 rounded-full self-center"

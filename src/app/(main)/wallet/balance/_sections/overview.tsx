@@ -1,12 +1,16 @@
+import React from "react";
 import Animated from "react-native-reanimated";
 import { BarChart } from "react-native-chart-kit";
 import { calculateWidth } from "@/utils/helpers";
 import * as Reanimated from "react-native-reanimated";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useAnimationContext } from "../../_layout/_context/animation";
+import { useGetTransactionStats } from "@/hooks/api/wallet.hook";
+import { useAnimateContext } from "../../_layout/_providers/animate.provider";
 
+export default React.Fragment;
 export function Overview() {
-  const { chartHeight } = useAnimationContext();
+  const statsQery = useGetTransactionStats()
+  const { chartHeight } = useAnimateContext();
 
   const chartAnimatedStyle = Reanimated.useAnimatedStyle(() => {
     return { height: chartHeight.value };
@@ -15,10 +19,15 @@ export function Overview() {
     return { display: chartHeight.value <= 5 ? "none" : "flex" };
   });
 
-  const data = {
-    datasets: [{ data: [20, 45, 28, 80, 99, 43] }],
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-  };
+  const data = React.useMemo(() => ({
+    labels: statsQery.data?.map(item => item.month.toString()) || [],
+    datasets: [{ data: statsQery.data?.map(item => item.total_amount) || [] }],
+  }), [statsQery])
+
+  // const data = {
+  //   datasets: [{ data: [20, 45, 28, 80, 99, 43] }],
+  //   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  // };
 
   return (
     <Animated.View
@@ -32,7 +41,7 @@ export function Overview() {
 
         <TouchableOpacity>
           <Text className="text-xs font-bold px-4 py-1 capitalize rounded-md border border-slate-600 text-slate-600">
-            monthly
+            year {new Date().getFullYear()}
           </Text>
         </TouchableOpacity>
       </View>

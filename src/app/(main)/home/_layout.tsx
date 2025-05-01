@@ -1,18 +1,31 @@
+import React from "react";
 import { Slot } from "expo-router";
 import { View } from "react-native";
-import { SharedMap } from "./_layout/shared-map";
-import MapProvider from "./_layout/_context/map.context";
+import { SharedMap } from "./_layout/map";
+import { useMapContext } from "./_layout/_context/map.context";
+import { requestLocationPermission } from "@/utils/permissions";
+import { useLocationContext } from "../_layout/_context/location.provider";
 
 export default function () {
-    return (
-        <MapProvider>
-            <View className="flex-1">
-                <SharedMap />
+    const { props } = useMapContext();
+    const { setEnable } = useLocationContext();
 
-                <View className="pt-10% pb-20% flex-1 absolute inset-0 bg-transparent pointer-events-box-none">
-                    <Slot initialRouteName="client" />
-                </View>
+    React.useEffect(() => {
+        requestPermissions();
+        async function requestPermissions() {
+            const hasPermission = await requestLocationPermission();
+            setEnable(hasPermission);
+        }
+
+        return () => { setEnable(false); };
+    }, []);
+
+    return (
+        <>
+            <SharedMap {...props} />
+            <View className="flex-1 py-10% px-5% mb-20% inset-0 absolute">
+                <Slot initialRouteName="client" />
             </View>
-        </MapProvider>
-    );
+        </>
+    )
 }

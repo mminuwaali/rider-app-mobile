@@ -3,7 +3,7 @@ import Feather from '@expo/vector-icons/Feather';
 import { FadeInDown } from 'react-native-reanimated';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { useAuthContext } from '@/app/(providers)/auth.provider';
+import { useAuthContext } from '@/components/providers/auth.provider';
 
 export function Profile() {
     const profile = false;

@@ -1,18 +1,19 @@
 import React from "react";
 import { router } from "expo-router";
-import { TokenManager } from "@/utils/token";
+import { useSignout } from "@/hooks/api/auth.hook";
 import { ConfirmLogout } from "./_modals/confirm-logout";
 import { Text, Modal, TouchableOpacity } from "react-native";
 
 export function Logout() {
+  const signout = useSignout();
   const [open, setOpen] = React.useState(false);
 
   const handleCancel = () => setOpen(false);
   const handleAccept = async () => {
-    await TokenManager.clearTokens();
+    await signout();
 
     handleCancel();
-    router.replace("/(onboard)");
+    router.replace("/welcome");
   };
 
   return (
@@ -31,7 +32,10 @@ export function Logout() {
         visible={open}
         onRequestClose={() => setOpen(false)}
         children={
-          <ConfirmLogout onAccept={handleAccept} onCancel={handleCancel} />
+          <ConfirmLogout
+            onAccept={handleAccept}
+            onCancel={handleCancel}
+          />
         }
       />
     </React.Fragment>

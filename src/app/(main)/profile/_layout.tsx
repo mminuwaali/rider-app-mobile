@@ -3,8 +3,9 @@ import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 
 export default function () {
   return (
-    <Stack screenOptions={screenOptions}>
+    <Stack screenOptions={screenOptions} initialRouteName="default/index">
       <Stack.Screen name="default/index" options={{ headerTitle: "Profile" }} />
+      <Stack.Screen name="address/index" options={{ headerTitle: "My Addresses" }} />
       <Stack.Screen name="edit-profile/index" options={{ headerTitle: "Edit Profile" }} />
       <Stack.Screen name="update-password/index" options={{ headerTitle: "Update Password" }} />
     </Stack>
@@ -23,7 +24,7 @@ function screenOptions(): NativeStackNavigationOptions {
       fontFamily: "Inter",
     },
     contentStyle: {
-      padding:"5%",
+      padding: "5%",
       backgroundColor: "white",
     },
   };

@@ -1,59 +1,42 @@
 import React from "react";
-import { Formik, FormikHelpers } from "formik";
+import { Formik } from "formik";
+import { router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
-import * as Yup from "yup";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TextInput } from "react-native";
+import { changePasswordSchema } from "@/constants/schema";
+import { useChangePassword } from "@/hooks/api/auth.hook";
+import { TouchableOpacity, ActivityIndicator } from "react-native";
 
-type PasswordChangeValues = {
-  old_password: string;
-  new_password: string;
-  confirm_password: string;
-};
 
-const passwordValidationSchema = Yup.object().shape({
-  old_password: Yup.string().required("Old password is required."),
-  new_password: Yup.string().required("New password is required."),
-  confirm_password: Yup.string()
-    .oneOf([Yup.ref("new_password"), undefined], "Passwords must match.")
-    .required("Please confirm your new password."),
-});
+export default function () {
+  const passwordMutation = useChangePassword();
 
-export default function y() {
-  const [loading, setLoading] = React.useState(false);
   const [visible, setVisible] = React.useState({
     old_password: false,
     new_password: false,
     confirm_password: false,
   });
 
-  const handlePasswordChange = async (
-    values: PasswordChangeValues,
-    helpers: FormikHelpers<PasswordChangeValues>
-  ) => {
-    setLoading(true);
-    console.log(values);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setLoading(false);
-    helpers.resetForm();
-    alert("Password updated successfully!");
+  const initialValues = {
+    old_password: "",
+    new_password: "",
+    confirm_password: "",
+  }
+
+  const onSumit = (values: typeof initialValues) => {
+    passwordMutation.mutate(values, {
+      onSuccess() {
+        alert("Password updated successfully!");
+        router.canGoBack() ? router.back() : router.replace("/profile/default");
+      }
+    })
   };
 
   return (
     <Formik
-      initialValues={{
-        old_password: "",
-        new_password: "",
-        confirm_password: "",
-      }}
-      validationSchema={passwordValidationSchema}
-      onSubmit={handlePasswordChange}
+      onSubmit={onSumit}
+      initialValues={initialValues}
+      validationSchema={changePasswordSchema}
     >
       {({ values, setFieldValue, handleSubmit, touched, errors }) => (
         <View className="flex-1 gap-20">
@@ -152,11 +135,11 @@ export default function y() {
 
           <View className="gap-6">
             <TouchableOpacity
-              disabled={loading}
+              disabled={passwordMutation.isPending}
               onPress={() => handleSubmit()}
               className="h-14 shadow rounded-xl bg-blue-600 items-center justify-center disabled:opacity-30 disabled:bg-gray-400"
             >
-              {loading ? (
+              {passwordMutation.isPending ? (
                 <ActivityIndicator className="text-white" />
               ) : (
                 <Text className="font-bold text-lg text-center text-white">

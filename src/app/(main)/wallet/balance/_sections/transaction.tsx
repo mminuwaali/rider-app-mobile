@@ -1,11 +1,21 @@
-import {View, Text } from "react-native";
-import Animated from "react-native-reanimated";
-import { TransactionCard } from "./cards/transaction";
-import { useAnimationContext } from "../../_layout/_context/animation";
+import React from "react";
+import { View, Text } from "react-native";
+import { TransactionCard } from "./_cards/transaction";
+import { useGetTransactions } from "@/hooks/api/wallet.hook";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { useAnimateContext } from "../../_layout/_providers/animate.provider";
 import { useAnimatedScrollHandler, withSpring } from "react-native-reanimated";
 
+export default React.Fragment;
 export function Transaction() {
-  const { scrollY, chartHeight } = useAnimationContext();
+  const transactionQuery = useGetTransactions();
+  const { scrollY, chartHeight } = useAnimateContext();
+
+  const data = React.useMemo(
+    () => transactionQuery.data?.results || [], [transactionQuery]
+  );
+
+  console.log(data)
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -29,16 +39,16 @@ export function Transaction() {
       </View>
 
       <Animated.FlatList
+        data={data}
         className="flex-1"
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         contentContainerClassName="gap-4"
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id.toString()}
-        data={Array.from({ length: 50 }, (_, id) => ({ id }))}
-        renderItem={() => (
-          <Animated.View>
-            <TransactionCard />
+        renderItem={({ item, index }) => (
+          <Animated.View entering={FadeInDown.delay(index * 200)}>
+            <TransactionCard item={item} />
           </Animated.View>
         )}
       />

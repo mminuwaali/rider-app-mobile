@@ -1,7 +1,7 @@
 import React from "react";
 import { MapViewProps, MapMarkerProps, MapPolygonProps } from "react-native-maps";
 
-interface IMap extends MapViewProps {
+export interface IMap extends MapViewProps {
     markers?: MapMarkerProps[];
     polylines?: MapPolygonProps[];
 }
