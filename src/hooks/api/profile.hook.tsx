@@ -1,6 +1,6 @@
 import api from "@/utils/request";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useAuthContext } from "@/app/(providers)/auth.provider";
+import { useAuthContext } from "@/components/providers/auth.provider";
 
 export const useGetProfile = () => {
   const { setUser } = useAuthContext();
@@ -17,11 +17,12 @@ export const useGetProfile = () => {
   });
 }
 
-export const useUpdateProfile = () =>
-  useMutation({
+export const useUpdateProfile = () => {
+  return useMutation({
     mutationKey: ["update-profile"],
     async mutationFn(data: Partial<IUser>) {
       const res = await api.patch("/auth/profile/", data);
       return res.data as IUser;
     },
   });
+}

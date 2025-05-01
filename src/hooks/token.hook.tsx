@@ -3,13 +3,13 @@ import { TokenManager } from '@/utils/token';
 
 export const useTokenListener = (interval: number = 60000) => {
   React.useEffect(() => {
-    const checkToken = async () => {
+    checkToken();
+    async function checkToken() {
       try {
         const accessToken = await TokenManager.getAccessToken();
-        if (accessToken && (await TokenManager.isTokenExpired(accessToken))) {
-          console.log('Access token expired. Refreshing...');
+        if (accessToken && (await TokenManager.isTokenExpired(accessToken)))
           await TokenManager.refreshAccessToken();
-        }
+
       } catch (error) {
         console.error('Error in token listener:', error);
       }
