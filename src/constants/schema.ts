@@ -12,3 +12,11 @@ export const signupSchema = yup.object({
     confirm: yup.string().oneOf([yup.ref('password')], "Password and Confirm must match").required(),
     role: yup.mixed().oneOf(["rider", "client"], "Role must be either 'rider' or 'client'").required("Role is required"),
 });
+
+export const changePasswordSchema = yup.object().shape({
+  old_password: yup.string().required("Old password is required."),
+  new_password: yup.string().required("New password is required."),
+  confirm_password: yup.string()
+    .oneOf([yup.ref("new_password"), undefined], "Passwords must match.")
+    .required("Please confirm your new password."),
+});
