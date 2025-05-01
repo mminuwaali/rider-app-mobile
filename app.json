@@ -11,22 +11,23 @@
     "ios": {
       "supportsTablet": false,
       "config": {
-        "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
+        "googleMapsApiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We use your location to provide better service."
       }
     },
     "android": {
+      "softwareKeyboardLayoutMode": "pan",
       "config": {
         "googleMaps": {
-          "apiKey": "process.env.GOOGLE_MAPS_API_KEY"
+          "apiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
         }
       },
       "adaptiveIcon": {
         "backgroundColor": "#000000",
         "foregroundImage": "./public/icon.png"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
       "package": "com.mminuwaali.riderapp"
     },
     "web": {
@@ -39,7 +40,7 @@
       [
         "expo-splash-screen",
         {
-          "imageWidth": 300,
+          "imageWidth": 600,
           "resizeMode": "cover",
           "backgroundColor": "#000000",
           "image": "./public/splash.png"
@@ -49,6 +50,12 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
     ],
