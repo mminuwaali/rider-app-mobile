@@ -20,3 +20,12 @@ export function calculateHeight(percentage: number) {
 
   return (Dimensions.get("window").height * percentage) / 100;
 }
+
+export const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  })
+}
