@@ -1,3 +1,4 @@
+import React from "react";
 import { Text, View } from "react-native";
 
 interface IHeaderPorps {
@@ -5,6 +6,7 @@ interface IHeaderPorps {
   description: string;
 }
 
+export default React.Fragment;
 export function Header(properties: IHeaderPorps) {
   return (
     <View>
