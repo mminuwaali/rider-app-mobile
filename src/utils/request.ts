@@ -4,7 +4,7 @@ import { getExpoHost } from "./expo-host";
 
 // const baseURL = getExpoHost();
 const baseURL = "https://rider-app-3lgy.onrender.com";
-const instance = axios.create({ baseURL: baseURL + ":8000/api/" });
+const instance = axios.create({ baseURL: baseURL + "/api/" });
 
 // Helper function to process Django-style errors
 const extractErrorMessages = (errorData: any) => {
